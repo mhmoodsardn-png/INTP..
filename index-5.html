@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MINDTYPE</title>
+<style>
+:root{color-scheme:dark;--bg:#07050f;--v:#8b5cf6;--vl:#a78bfa;--vd:#6d28d9;--text:#f1ecff;--muted:#b4aad0;--glass:rgba(255,255,255,.06);--glass2:rgba(255,255,255,.1);--border:rgba(167,139,250,.25);--danger:#fda4af;--ok:#86efac;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+*,*::before,*::after{box-sizing:inherit;margin:0;padding:0}
+body{min-height:100vh;font-family:"Segoe UI","Noto Sans Arabic",Cairo,Tahoma,system-ui,sans-serif;color:var(--text);background:radial-gradient(1000px 600px at 15% -10%,rgba(109,40,217,.35),transparent 60%),radial-gradient(900px 600px at 100% 10%,rgba(139,92,246,.22),transparent 60%),var(--bg);background-attachment:fixed;line-height:1.7;overflow-x:hidden}
+html[lang=en] body{font-family:Inter,"Segoe UI",system-ui,-apple-system,Arial,sans-serif;line-height:1.6}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:880px;margin:0 auto;padding:16px 18px}
+.brand{display:inline-flex;align-items:center;gap:10px;background:none;border:0;color:var(--text);cursor:pointer;font:inherit;font-weight:800;letter-spacing:.12em;font-size:1.1rem;border-radius:12px;padding:4px 6px}
+.brand i{font-style:normal;color:var(--vl);text-shadow:0 0 14px var(--v);font-size:1.3rem}
+#app{max-width:880px;margin:0 auto;padding:8px 18px 56px}
+.screen[hidden],[hidden]{display:none!important}
+.screen{animation:up .45s ease both}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card{background:var(--glass);border:1px solid var(--border);border-radius:20px;padding:26px 22px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 0 40px rgba(139,92,246,.12),inset 0 1px 0 rgba(255,255,255,.05)}
+.hero{text-align:center;padding:38px 22px}
+.orb{width:76px;height:76px;margin:0 auto 14px;display:grid;place-items:center;font-size:2.2rem;color:#fff;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--vl),var(--vd));box-shadow:0 0 36px rgba(139,92,246,.65)}
+.eyebrow{color:var(--vl);letter-spacing:.18em;font-size:.85rem;text-transform:uppercase;margin-bottom:8px}
+h1{font-size:clamp(1.7rem,6vw,2.6rem);line-height:1.25;margin-bottom:12px}
+.lead{color:var(--muted);font-size:1.05rem;max-width:60ch;margin:0 auto 18px}
+.chips{list-style:none;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:18px}
+.chip{padding:6px 14px;border-radius:999px;font-size:.9rem;background:var(--glass2);border:1px solid var(--border)}
+.notice{font-size:.9rem;color:var(--muted);margin:0 auto 22px;max-width:60ch;padding:10px 14px;border-radius:12px;border:1px dashed var(--border)}
+.warnbox{color:#fde68a;border-color:rgba(253,230,138,.4)}
+.fine{font-size:.85rem;color:var(--muted);margin:10px 0 24px}
+.btn{font:inherit;font-weight:700;cursor:pointer;border-radius:14px;padding:12px 22px;border:1px solid transparent;color:var(--text);min-height:46px;transition:transform .15s,box-shadow .2s,background .2s,border-color .2s}
+.btn-p{background:linear-gradient(135deg,var(--v),var(--vd));box-shadow:0 6px 24px rgba(139,92,246,.4)}
+.btn-p:hover{box-shadow:0 8px 32px rgba(139,92,246,.65);transform:translateY(-1px)}
+.btn-g{background:var(--glass);border-color:var(--border)}
+.btn-g:hover{background:var(--glass2);border-color:var(--vl)}
+.btn:active{transform:scale(.97)}
+.btn-lg{padding:14px 34px;font-size:1.1rem}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--vl);outline-offset:3px}
+.qhead{display:flex;justify-content:space-between;color:var(--muted);font-size:.9rem;margin-bottom:8px}
+.progress{height:10px;background:var(--glass2);border-radius:999px;overflow:hidden;margin-bottom:24px}
+.fillbar{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--vd),var(--vl));box-shadow:0 0 14px var(--v);transition:width .4s}
+.question{font-size:clamp(1.2rem,4.5vw,1.6rem);line-height:1.55;margin-bottom:22px;outline:none}
+.options{display:grid;gap:10px}
+.option{position:relative;display:flex;align-items:center;gap:14px;padding:14px 16px;min-height:54px;cursor:pointer;background:var(--glass);border:1px solid var(--border);border-radius:14px;transition:background .2s,border-color .2s,transform .15s,box-shadow .2s}
+.option:hover{background:var(--glass2);border-color:var(--vl)}
+.option:active{transform:scale(.985)}
+.option input{position:absolute;opacity:0;inset:0;width:100%;height:100%;cursor:pointer;margin:0}
+.dot{flex:0 0 22px;width:22px;height:22px;border-radius:50%;border:2px solid var(--vl);display:grid;place-items:center}
+.dot::after{content:"";width:10px;height:10px;border-radius:50%;background:#fff;transform:scale(0);transition:transform .2s}
+.option.sel{background:linear-gradient(135deg,rgba(139,92,246,.35),rgba(109,40,217,.25));border-color:var(--vl);box-shadow:0 0 22px rgba(139,92,246,.45)}
+.option.sel .dot{background:var(--v)}
+.option.sel .dot::after{transform:scale(1)}
+.option:has(input:focus-visible){outline:3px solid var(--vl);outline-offset:2px}
+.otext{font-weight:600}
+.warn{margin-top:14px;color:var(--danger);font-weight:600}
+.nav{display:flex;justify-content:space-between;gap:12px;margin-top:24px}
+.nav.wrap{flex-wrap:wrap;justify-content:center}
+.code{font-size:clamp(2.8rem,14vw,5rem);letter-spacing:.15em;direction:ltr;background:linear-gradient(135deg,#fff,var(--vl));-webkit-background-clip:text;background-clip:text;color:transparent;outline:none}
+.tname{font-size:1.4rem;color:var(--vl);margin-bottom:14px}
+.stitle{font-size:1.15rem;margin:26px 0 12px;color:var(--vl)}
+.card .stitle{margin-top:0}
+.dims,.two{display:grid;gap:14px;grid-template-columns:1fr}
+.two{margin-bottom:22px}
+.dtitle{font-weight:700;margin-bottom:10px}
+.drow{display:flex;justify-content:space-between;font-size:.95rem;margin-bottom:6px;color:var(--muted)}
+.win{color:var(--text);font-weight:800}
+.bar{height:10px;border-radius:999px;background:var(--glass2);overflow:hidden}
+.bar div{height:100%;background:linear-gradient(90deg,var(--vd),var(--vl))}
+.ddesc{margin-top:10px;font-size:.92rem;color:var(--muted)}
+.tag{display:inline-block;margin-inline-start:8px;padding:0 10px;font-size:.75rem;border-radius:999px;color:#fde68a;border:1px solid rgba(253,230,138,.4)}
+.bullets{padding-inline-start:20px;display:grid;gap:8px;color:var(--muted)}
+.bullets li::marker{color:var(--vl)}
+.manual{margin-top:18px}
+.manual label{display:block;margin-bottom:6px;color:var(--muted);font-size:.9rem}
+.manual textarea{width:100%;padding:12px;border-radius:12px;resize:vertical;background:var(--glass);color:var(--text);border:1px solid var(--border);font:inherit}
+.toast{position:fixed;inset-inline:16px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:10;max-width:460px;margin-inline:auto;padding:12px 18px;border-radius:14px;text-align:center;font-weight:600;background:rgba(20,12,40,.95);border:1px solid var(--vl);box-shadow:0 0 30px rgba(139,92,246,.5);animation:up .3s both}
+.toast.error{border-color:var(--danger);color:var(--danger)}
+.toast.ok{border-color:var(--ok);color:var(--ok)}
+@media(min-width:700px){.card{padding:34px 32px}.dims,.two{grid-template-columns:1fr 1fr}}
+@media(max-width:380px){.nav{flex-direction:column-reverse}.nav .btn{width:100%}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <button class="brand" id="brandBtn" type="button"><i aria-hidden="true">◈</i><span>MINDTYPE</span></button>
+  <button class="btn btn-g" id="langBtn" type="button"></button>
+</header>
+<main id="app">
+  <section id="s-home" class="screen" aria-labelledby="homeTitle">
+    <div class="card hero">
+      <div class="orb" aria-hidden="true">◈</div>
+      <p class="eyebrow">Discover Your Personality</p>
+      <h1 id="homeTitle" data-i="homeTitle"></h1>
+      <p class="lead" data-i="homeDesc"></p>
+      <ul class="chips"><li class="chip" data-i="chipQ"></li><li class="chip" data-i="chipT"></li></ul>
+      <p class="notice" data-i="homeDis"></p>
+      <button class="btn btn-p btn-lg" id="startBtn" type="button" data-i="start"></button>
+    </div>
+  </section>
+
+  <section id="s-quiz" class="screen" aria-labelledby="qText" hidden>
+    <div class="card">
+      <div class="qhead"><span id="qCounter"></span><span id="qPct"></span></div>
+      <div class="progress" id="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="fillbar" id="fillbar"></div></div>
+      <h2 id="qText" class="question" tabindex="-1"></h2>
+      <div class="options" id="options" role="radiogroup" aria-labelledby="qText"></div>
+      <p class="warn" id="warnMsg" role="alert" hidden></p>
+      <div class="nav"><button class="btn btn-g" id="prevBtn" type="button"></button><button class="btn btn-p" id="nextBtn" type="button"></button></div>
+    </div>
+  </section>
+
+  <section id="s-result" class="screen" aria-labelledby="rType" hidden>
+    <div class="card hero">
+      <p class="eyebrow" data-i="resTitle"></p>
+      <h1 id="rType" class="code" tabindex="-1"></h1>
+      <h2 id="rName" class="tname"></h2>
+      <p id="rDesc" class="lead"></p>
+      <p id="tieNote" class="notice warnbox" hidden></p>
+    </div>
+    <h3 class="stitle" data-i="dimsTitle"></h3>
+    <div class="dims" id="dimsGrid"></div>
+    <p class="fine" data-i="scoreNote"></p>
+    <div class="two">
+      <div class="card"><h3 class="stitle" data-i="strTitle"></h3><ul class="bullets" id="strList"></ul></div>
+      <div class="card"><h3 class="stitle" data-i="chaTitle"></h3><ul class="bullets" id="chaList"></ul></div>
+    </div>
+    <p class="notice" data-i="resDis"></p>
+    <div class="nav wrap">
+      <button class="btn btn-p" id="shareBtn" type="button" data-i="share"></button>
+      <button class="btn btn-g" id="retakeBtn" type="button" data-i="retake"></button>
+      <button class="btn btn-g" id="homeBtn" type="button" data-i="home"></button>
+    </div>
+    <div id="manualBox" class="manual" hidden><label for="manualText" data-i="manualLabel"></label><textarea id="manualText" rows="6" readonly></textarea></div>
+  </section>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+'use strict';
+/* ===== بيانات: الأبعاد والأسئلة (اختيار بين A وB) ===== */
+const DIMS={EI:['E','I'],SN:['S','N'],TF:['T','F'],JP:['J','P']};
+const ORDER=['EI','SN','TF','JP'];
+
+// كل صف: [البُعد، نص السؤال ar، en، حرف A، نص A ar، en، حرف B، نص B ar، en]
+// الحرف المرتبط بكل خيار معرّف صراحة هنا، والحساب يقرؤه من هذه البيانات فقط
+const QUESTIONS=[
+['EI','بعد يوم طويل، كيف تستعيد طاقتك غالبًا؟','After a long day, how do you usually recharge?','E','أقضي وقتًا مع الآخرين وأتحدث معهم.','I spend time with others and talk with them.','I','أقضي وقتًا هادئًا بمفردي.','I spend quiet time on my own.'],
+['EI','عندما تكون في مكان مليء بأشخاص لا تعرفهم، ماذا تفعل غالبًا؟','When you are in a place full of people you don’t know, what do you usually do?','E','أبدأ المحادثات وأتعرف على أشخاص جدد.','I start conversations and meet new people.','I','أراقب المكان أولًا وأتحدث عندما أشعر بالارتياح.','I observe the place first and speak when I feel comfortable.'],
+['EI','عندما تخطر لك فكرة جديدة، كيف تتعامل معها؟','When a new idea comes to you, how do you handle it?','E','أشاركها مع الآخرين وأناقشها بصوت مرتفع.','I share it with others and discuss it out loud.','I','أفكر فيها وحدي قبل أن أشاركها.','I think it over alone before sharing it.'],
+['EI','في مجموعة من الأصدقاء، ما الدور الأقرب إليك؟','In a group of friends, which role is closest to you?','E','أشارك كثيرًا في الحديث وأعبّر عن أفكاري.','I talk a lot and express my ideas.','I','أستمع غالبًا وأتحدث عندما يكون لدي شيء أريد قوله.','I mostly listen and speak when I have something to say.'],
+['SN','عندما تتعلم مهارة جديدة، ما الطريقة التي تفضلها؟','When you learn a new skill, which approach do you prefer?','S','أمثلة عملية وخطوات واضحة يمكن تطبيقها.','Practical examples and clear steps I can apply.','N','فهم الفكرة العامة واكتشاف احتمالات جديدة.','Understanding the big idea and discovering new possibilities.'],
+['SN','عندما تنظر إلى موقف معين، ما الذي تلاحظه أولًا؟','When you look at a situation, what do you notice first?','S','الحقائق والتفاصيل الواضحة الموجودة أمامي.','The clear facts and details in front of me.','N','الروابط والأفكار والمعاني التي قد تكون وراءه.','The connections, ideas and meanings that may lie behind it.'],
+['SN','عندما تستمع إلى قصة، ما الذي يجذب انتباهك أكثر؟','When you listen to a story, what catches your attention most?','S','الأحداث الفعلية والتفاصيل التي حدثت.','The actual events and details that happened.','N','الرموز والمعاني والاحتمالات التي توحي بها القصة.','The symbols, meanings and possibilities the story suggests.'],
+['SN','عندما تبدأ مشروعًا جديدًا، ما الذي تفكر فيه أولًا؟','When you start a new project, what do you think about first?','S','الخطوات الواقعية التي يمكنني تنفيذها الآن.','The realistic steps I can take now.','N','الرؤية الكبيرة وما يمكن أن يصبح عليه المشروع مستقبلًا.','The big vision and what the project could become in the future.'],
+['TF','عندما يطلب منك صديق المساعدة في مشكلة، ماذا تفعل غالبًا؟','When a friend asks for your help with a problem, what do you usually do?','T','أحلل المشكلة وأقترح حلولًا منطقية.','I analyze the problem and suggest logical solutions.','F','أستمع إلى مشاعره وأحاول فهم ما يمر به.','I listen to their feelings and try to understand what they are going through.'],
+['TF','عندما تتخذ قرارًا صعبًا، ما الذي ترجحه عادةً؟','When you make a hard decision, what do you usually weigh most?','T','الأدلة والمعايير المنطقية والاتساق.','Evidence, logical criteria and consistency.','F','القيم الشخصية وتأثير القرار على الناس.','Personal values and the effect of the decision on people.'],
+['TF','عندما تختلف مع شخص في الرأي، ما الذي تركز عليه؟','When you disagree with someone, what do you focus on?','T','قوة الحجج والأدلة التي تدعم الرأي.','The strength of the arguments and evidence supporting the view.','F','فهم وجهة نظر الشخص ومراعاة مشاعره.','Understanding the person’s point of view and being considerate of their feelings.'],
+['TF','عندما تقدم ملاحظات لشخص يريد تحسين عمله، كيف تتصرف؟','When you give feedback to someone who wants to improve their work, how do you act?','T','أكون مباشرًا وأحدد ما يحتاج إلى تحسين.','I am direct and point out what needs improving.','F','أراعي طريقة الكلام حتى تصل الملاحظات بلطف.','I watch how I phrase it so the feedback lands gently.'],
+['JP','كيف تفضل تنظيم مهام أسبوعك؟','How do you prefer to organize your week’s tasks?','J','أضع خطة وجدولًا وأحاول الالتزام بهما.','I make a plan and a schedule and try to stick to them.','P','أترك مجالًا للتغيير وأقرر حسب الظروف.','I leave room for change and decide as circumstances unfold.'],
+['JP','عندما تستعد لرحلة، ماذا تفعل؟','When you prepare for a trip, what do you do?','J','أخطط مسبقًا وأجهز معظم الأشياء مبكرًا.','I plan ahead and get most things ready early.','P','أجهز الأساسيات وأترك بعض القرارات لوقتها.','I prepare the basics and leave some decisions for later.'],
+['JP','عندما تعمل على مشروع، ما الطريقة الأقرب إليك؟','When you work on a project, which approach is closest to yours?','J','أقسم العمل إلى مراحل وأكملها بترتيب واضح.','I split the work into stages and finish them in a clear order.','P','أتنقل بمرونة بين المهام حسب اهتمامي وما يظهر من أفكار.','I move flexibly between tasks according to my interest and the ideas that come up.'],
+['JP','إذا تغيرت خطتك فجأة، كيف تتعامل مع الأمر غالبًا؟','If your plan suddenly changes, how do you usually handle it?','J','أفضل معرفة الخطة النهائية والعودة إلى التنظيم.','I prefer to know the final plan and get back to being organized.','P','أتأقلم مع الوضع الجديد وأغير خطتي بسهولة.','I adapt to the new situation and change my plan easily.']
+].map(function(r,i){return{id:'q'+(i+1),dim:r[0],text:{ar:r[1],en:r[2]},options:{A:{letter:r[3],text:{ar:r[4],en:r[5]}},B:{letter:r[6],text:{ar:r[7],en:r[8]}}}};});
+
+/* ===== الترجمات ===== */
+const I18N={
+ar:{langBtn:'English',homeTitle:'اكتشف نمط شخصيتك',homeDesc:'اختبار قصير من 16 سؤالًا يساعدك على استكشاف ميولك في التفكير واتخاذ القرارات والتعامل مع الآخرين، وفق إطار أنماط MBTI الستة عشر.',chipQ:'16 سؤالًا',chipT:'نحو 3 دقائق',homeDis:'هذا اختبار استكشافي قصير للتأمل الذاتي، وليس تشخيصًا نفسيًا ولا اختبارًا معتمدًا رسميًا.',start:'ابدأ الاختبار',counter:'السؤال {n} من {total}',prev:'السابق',next:'التالي',finish:'إنهاء وعرض النتيجة',warnNo:'يرجى اختيار إجابة قبل المتابعة.',warnInc:'هناك أسئلة لم تُجب عنها. انتقلنا إلى أول سؤال ناقص.',resTitle:'نتيجتك',dimsTitle:'أبعاد شخصيتك',closeTag:'متقارب',closeNote:'اختياراتك متعادلة في هذا البُعد (2 مقابل 2).',tieNote:'تنبيه: تعادلت اختياراتك (2 مقابل 2) في: {dims}. حسمنا التعادل بالحرف المرتبط بإجابتك عن أول سؤال في ذلك البُعد، فاعتبر النمط الظاهر نقطة بداية للتأمل وليس يقينًا.',scoreNote:'النسب تمثّل حصة اختياراتك لكل حرف من الأسئلة الأربعة لهذا البُعد فقط، وهي مؤشر تقريبي لهذا الاختبار القصير وليست نسبة علمية لاحتمال صحة النمط.',strTitle:'نقاط قوة محتملة',chaTitle:'تحديات محتملة',resDis:'النتيجة استكشافية وليست حكمًا نهائيًا على شخصيتك، والاختبار غير معتمد رسميًا ولا يحدد الشخصية بصورة قاطعة.',share:'مشاركة النتيجة',retake:'إعادة الاختبار',home:'الرئيسية',shared:'تمت المشاركة.',copied:'تم نسخ نص النتيجة.',copyFail:'تعذّر النسخ تلقائيًا. انسخ النص من الصندوق أدناه.',manualLabel:'انسخ النص يدويًا:',shareHead:'نتيجتي في MINDTYPE',
+dimNames:{EI:'الطاقة والتفاعل',SN:'إدراك المعلومات',TF:'اتخاذ القرار',JP:'أسلوب الحياة'},
+L:{E:['الانبساط (E)','تستمد طاقتك غالبًا من التفاعل مع الناس والأنشطة الخارجية.'],I:['الانطواء (I)','تستعيد طاقتك غالبًا بالوقت الهادئ والمحادثات العميقة.'],S:['الحسّي (S)','تميل إلى الوقائع الملموسة والخبرة العملية والتفاصيل.'],N:['الحدسي (N)','تميل إلى الأنماط والاحتمالات والصورة الأكبر.'],T:['التفكير (T)','تميل إلى التحليل المنطقي والمعايير الموضوعية عند القرار.'],F:['الشعور (F)','تميل إلى مراعاة القيم والأثر الإنساني عند القرار.'],J:['الحسم (J)','تميل إلى التنظيم والتخطيط وإغلاق الأمور.'],P:['المرونة (P)','تميل إلى المرونة والاستكشاف وإبقاء الخيارات مفتوحة.']}},
+en:{langBtn:'العربية',homeTitle:'Discover your personality type',homeDesc:'A short 16-question test to help you explore how you think, make decisions and relate to others, based on the 16 MBTI-style types.',chipQ:'16 questions',chipT:'About 3 minutes',homeDis:'This is a short exploratory test for self-reflection. It is not a psychological diagnosis and not an officially certified assessment.',start:'Start Test',counter:'Question {n} of {total}',prev:'Previous',next:'Next',finish:'Finish & see result',warnNo:'Please choose an answer before continuing.',warnInc:'Some questions are unanswered. We moved you to the first missing one.',resTitle:'Your result',dimsTitle:'Your four dimensions',closeTag:'Close',closeNote:'Your choices are tied on this dimension (2 vs 2).',tieNote:'Note: your choices were tied (2 vs 2) on: {dims}. We broke the tie using the letter linked to your answer to the first question of that dimension, so treat the shown type as a starting point for reflection, not a certainty.',scoreNote:'Percentages show your share of choices for each letter among this dimension’s four questions only. They are a rough indicator for this short test, not a scientific probability that the type is correct.',strTitle:'Possible strengths',chaTitle:'Possible challenges',resDis:'This result is exploratory, not a final judgment of your personality. The test is not officially certified and cannot determine personality conclusively.',share:'Share result',retake:'Retake test',home:'Home',shared:'Shared.',copied:'Result text copied.',copyFail:'Automatic copy failed. Copy the text from the box below.',manualLabel:'Copy the text manually:',shareHead:'My MINDTYPE result',
+dimNames:{EI:'Energy & interaction',SN:'Taking in information',TF:'Making decisions',JP:'Structure & lifestyle'},
+L:{E:['Extraversion (E)','You tend to draw energy from people and outward activity.'],I:['Introversion (I)','You tend to recharge through quiet time and deeper conversations.'],S:['Sensing (S)','You lean toward concrete facts, practical experience and details.'],N:['Intuition (N)','You lean toward patterns, possibilities and the bigger picture.'],T:['Thinking (T)','You lean toward logical analysis and objective criteria when deciding.'],F:['Feeling (F)','You lean toward values and human impact when deciding.'],J:['Judging (J)','You lean toward structure, planning and closure.'],P:['Perceiving (P)','You lean toward flexibility, exploration and open options.']}}
+};
+
+/* ===== الأنماط الستة عشر: [name en, name ar, desc en, desc ar, strengths en, strengths ar, challenges en, challenges ar] ===== */
+const TYPE_ROWS={
+ISTJ:['The Reliable Organizer','المنظِّم الموثوق','You value facts, duty and consistency, prefer proven methods, decide through careful logic, and like to finish what you start.','تقدّر الحقائق والمسؤولية والاتساق، وتفضّل الطرق المجرَّبة، وتقرر بمنطق متأنٍّ، وتحب إنجاز ما تبدأه.',['Dependable and thorough','Strong sense of responsibility'],['موثوق ودقيق','حس قوي بالمسؤولية'],['May be wary of untested approaches','Might find delegating hard'],['قد تتحفظ على الأساليب غير المجرَّبة','قد يصعب عليك التفويض']],
+ISFJ:['The Caring Protector','الحامي المعتني','You notice practical needs, remember what matters to people, and decide with loyalty and care.','تلاحظ الاحتياجات العملية وتتذكر ما يهم الناس، وتقرر بوفاء واهتمام.',['Attentive, supportive and loyal','Patient and steady'],['منتبه وداعم ووفي','صبور وثابت'],['May put your own needs last','Might avoid conflict even when speaking up would help'],['قد تؤخر احتياجاتك الشخصية','قد تتجنب الخلاف حتى حين يفيد التعبير عن رأيك']],
+INFJ:['The Insightful Guide','المرشد البصير','You look for deeper meaning in people and ideas, and weigh decisions through your values with a long-term view.','تبحث عن المعنى الأعمق في الناس والأفكار، وتزن قراراتك عبر قيمك بنظرة بعيدة المدى.',['Perceptive and empathetic','Purposeful, with long-term vision'],['مدرك ومتعاطف','هادف ولديه رؤية بعيدة'],['May hold ideals that are hard to meet','Might withdraw instead of asking for help'],['قد تضع مثاليات يصعب تحقيقها','قد تنسحب بدل طلب المساعدة']],
+INTJ:['The Strategic Architect','المهندس الاستراتيجي','You connect ideas into long-range plans, enjoy improving systems, and decide through independent logical analysis.','تربط الأفكار في خطط بعيدة المدى، وتستمتع بتحسين الأنظمة، وتقرر بتحليل منطقي مستقل.',['Strategic, independent and focused','Sees how parts fit a bigger plan'],['استراتيجي ومستقل ومركّز','يرى انسجام الأجزاء مع خطة أكبر'],['May come across as distant or critical','Might underestimate the emotional side of teamwork'],['قد تبدو بعيدًا أو ناقدًا','قد تقلل من الجانب العاطفي في العمل الجماعي']],
+ISTP:['The Hands-on Analyst','المحلل العملي','You like understanding how things work by examining them directly, stay calm, and prefer freedom to adapt.','تحب فهم طريقة عمل الأشياء بفحصها مباشرة، وتبقى هادئًا، وتفضّل حرية التكيّف.',['Calm practical problem-solver','Adaptable and resourceful'],['هادئ في حل المشكلات العملية','مرن وواسع الحيلة'],['May share feelings or plans less openly','Might lose interest in routine'],['قد تشارك مشاعرك وخططك بقدر أقل','قد تفقد الحماس للروتين']],
+ISFP:['The Gentle Creator','المبدع الهادئ','You experience the world through the senses, express your values through action and creativity, and like a flexible pace.','تعيش العالم عبر الحواس، وتعبّر عن قيمك بالفعل والإبداع، وتفضّل إيقاعًا مرنًا.',['Sensitive, kind and artistic','Present in the moment'],['حساس ولطيف وفني','منغمس في اللحظة'],['May hesitate to voice needs or disagreement','Might struggle with rigid deadlines'],['قد تتردد في التعبير عن احتياجاتك أو اختلافك','قد تجد صعوبة في المواعيد الصارمة']],
+INFP:['The Idealistic Dreamer','الحالم المثالي','You look for meaning and authenticity, imagine how things could be better, decide through personal values and keep options open.','تبحث عن المعنى والأصالة، وتتخيّل كيف يمكن أن تتحسن الأمور، وتقرر عبر قيمك وتبقي خياراتك مفتوحة.',['Imaginative and value-driven','Open to different perspectives'],['خيالي ومحرَّك بالقيم','منفتح على وجهات النظر'],['May postpone tasks that feel less meaningful','Might be hard on yourself when reality falls short'],['قد تؤجل المهام التي لا تبدو ذات معنى','قد تقسو على نفسك حين تقصّر الواقع عن مثالياتك']],
+INTP:['The Curious Theorist','المفكر الفضولي','You love exploring ideas and the logic behind them, question assumptions, and prefer flexible open-ended thinking.','تحب استكشاف الأفكار والمنطق الكامن خلفها، وتتساءل عن المسلّمات، وتفضّل التفكير المرن المفتوح.',['Analytical, original and curious','Comfortable with abstract problems'],['تحليلي وأصيل وفضولي','مرتاح مع المسائل المجردة'],['May stay in analysis longer than needed','Might overlook everyday details'],['قد تطيل التحليل أكثر من اللازم','قد تغفل التفاصيل اليومية']],
+ESTP:['The Bold Doer','المبادر الجريء','You like action, respond quickly to what is happening, trust concrete facts and learn by doing.','تحب الفعل، وتستجيب سريعًا لما يجري، وتثق بالوقائع الملموسة، وتتعلم بالتجربة.',['Energetic, practical and quick to act','Good at thinking on your feet'],['نشيط وعملي وسريع المبادرة','جيد في التصرف السريع'],['May act before weighing long-term consequences','Might find slow planning tedious'],['قد تتحرك قبل وزن العواقب البعيدة','قد تملّ من التخطيط البطيء']],
+ESFP:['The Lively Performer','المرِح المتفاعل','You bring warmth and energy to the moment, enjoy sharing experiences, and decide with attention to people.','تضفي الدفء والحيوية على اللحظة، وتستمتع بمشاركة التجارب، وتقرر مع اهتمام بالناس.',['Warm, spontaneous and sociable','Lifts the mood of a group'],['دافئ وعفوي واجتماعي','يرفع معنويات المجموعة'],['May find long solitary tasks hard to focus on','Might avoid difficult conversations'],['قد يصعب عليك التركيز في المهام الانفرادية الطويلة','قد تتجنب الحوارات الصعبة']],
+ENFP:['The Inspiring Explorer','المستكشف الملهِم','You see possibilities everywhere, enjoy connecting people and ideas, and decide through values and enthusiasm.','ترى الاحتمالات في كل مكان، وتستمتع بالربط بين الناس والأفكار، وتقرر عبر القيم والحماس.',['Enthusiastic, creative and encouraging','Quick to connect people and ideas'],['متحمس ومبدع ومشجِّع','سريع في الربط بين الناس والأفكار'],['May start more projects than you finish','Might feel drained by routine admin'],['قد تبدأ مشاريع أكثر مما تنهي','قد ترهقك الأعمال الإدارية الروتينية']],
+ENTP:['The Inventive Debater','المبتكر المحاور','You enjoy testing ideas through discussion, spot new angles, use logic flexibly and like a challenge.','تستمتع باختبار الأفكار عبر النقاش، وتكتشف زوايا جديدة، وتستخدم المنطق بمرونة، وتحب التحدي.',['Inventive, quick-witted and persuasive','Comfortable challenging the status quo'],['مبتكر وسريع البديهة ومقنع','مرتاح في تحدي الوضع القائم'],['May debate for its own sake and tire others','Might leave follow-through unfinished'],['قد تجادل لمجرد الجدال فترهق الآخرين','قد تترك المتابعة دون إكمال']],
+ESTJ:['The Decisive Manager','المدير الحاسم','You like clear structure, facts and efficient results, decide through practical logic and organize people and tasks well.','تحب البنية الواضحة والحقائق والنتائج الفعّالة، وتقرر بمنطق عملي، وتنظّم الناس والمهام بكفاءة.',['Organized, direct and dependable','Good at coordinating people toward goals'],['منظم ومباشر وموثوق','جيد في تنسيق الناس نحو الأهداف'],['May seem blunt or inflexible at times','Might overlook feelings when focused on efficiency'],['قد تبدو صريحًا أو متصلبًا أحيانًا','قد تغفل المشاعر عند التركيز على الكفاءة']],
+ESFJ:['The Warm Connector','الرابط الودود','You pay attention to people’s needs, enjoy creating harmony and belonging, and organize things so others feel cared for.','تنتبه لاحتياجات الناس، وتستمتع بصنع الانسجام والانتماء، وتنظّم الأمور ليشعر الآخرون بالاهتمام.',['Considerate, sociable and organized','Skilled at building community'],['مراعٍ واجتماعي ومنظم','ماهر في بناء المجتمع'],['May be sensitive to criticism','Might take on too much to keep everyone happy'],['قد تتأثر بالنقد','قد تتحمل أكثر من اللازم لإرضاء الجميع']],
+ENFJ:['The Inspiring Mentor','الموجّه الملهِم','You read people well, like helping them grow, see potential and decide with attention to values and impact.','تقرأ الناس جيدًا، وتحب مساعدتهم على النمو، وترى الإمكانات، وتقرر مع اهتمام بالقيم والأثر.',['Encouraging, articulate and people-aware','Motivates others around a shared purpose'],['مشجِّع وواضح التعبير وواعٍ بالناس','يحفّز الآخرين حول غاية مشتركة'],['May carry others’ concerns more than is healthy','Might find blunt criticism hard to hear'],['قد تحمل همومَ الآخرين أكثر مما ينبغي','قد يصعب عليك تقبّل النقد الصريح']],
+ENTJ:['The Driven Leader','القائد الطموح','You see what needs organizing, move decisively toward goals, and combine strategic thinking with logical decisions.','ترى ما يحتاج إلى تنظيم، وتتحرك بحزم نحو الأهداف، وتجمع بين التفكير الاستراتيجي والقرارات المنطقية.',['Confident, strategic and goal-oriented','Turns plans into action efficiently'],['واثق واستراتيجي وموجّه نحو الهدف','يحوّل الخطط إلى أفعال بكفاءة'],['May push faster than others can follow','Might undervalue patience and quieter voices'],['قد تدفع بسرعة لا يجاريها الآخرون','قد تقلل من قيمة الصبر والأصوات الهادئة']]
+};
+const TYPES={};
+Object.keys(TYPE_ROWS).forEach(function(k){var r=TYPE_ROWS[k];TYPES[k]={name:{en:r[0],ar:r[1]},desc:{en:r[2],ar:r[3]},strengths:{en:r[4],ar:r[5]},challenges:{en:r[6],ar:r[7]}};});
+
+/* ===== محرك الحساب (دوال نقية) ===== */
+function firstQuestionIndex(dim){return QUESTIONS.findIndex(function(q){return q.dim===dim;});}
+function computeResult(answers){
+  if(!Array.isArray(answers)||answers.length!==QUESTIONS.length)return null;
+  var counts={};
+  for(var i=0;i<QUESTIONS.length;i++){
+    var a=answers[i];
+    if(a!=='A'&&a!=='B')return null;                 // إجابة ناقصة أو غير صالحة
+    var letter=QUESTIONS[i].options[a].letter;       // الحرف المرتبط بالخيار المختار
+    counts[letter]=(counts[letter]||0)+1;            // العدّ داخل البُعد فقط لأن حروف كل بُعد فريدة
+  }
+  var code='';
+  var dims=ORDER.map(function(k){
+    var f=DIMS[k][0],s=DIMS[k][1],cf=counts[f]||0,cs=counts[s]||0,letter,tie=cf===cs;
+    if(cf>cs)letter=f;
+    else if(cs>cf)letter=s;
+    else{var fi=firstQuestionIndex(k);letter=QUESTIONS[fi].options[answers[fi]].letter;} // كسر التعادل بالسؤال الأول
+    code+=letter;
+    return{key:k,first:f,second:s,countFirst:cf,countSecond:cs,pctFirst:Math.round(cf/(cf+cs)*100),pctSecond:100-Math.round(cf/(cf+cs)*100),letter:letter,tie:tie,close:tie};
+  });
+  return{type:code,dims:dims};
+}
+// اختبارات ذاتية من الـ Console: MindTypeTests()
+window.MindTypeTests=function(){
+  var out={types:{},tie:{}},ok=0;
+  var all=['ISTJ','ISFJ','INFJ','INTJ','ISTP','ISFP','INFP','INTP','ESTP','ESFP','ENFP','ENTP','ESTJ','ESFJ','ENFJ','ENTJ'];
+  all.forEach(function(code){
+    var ans=QUESTIONS.map(function(q){var want=code[ORDER.indexOf(q.dim)];return q.options.A.letter===want?'A':'B';});
+    var got=computeResult(ans).type;out.types[code]=got;if(got===code)ok++;
+  });
+  out.sixteenOfSixteen=ok===16;
+  out.allA=computeResult(QUESTIONS.map(function(){return 'A';})).type;
+  out.allB=computeResult(QUESTIONS.map(function(){return 'B';})).type;
+  // تعادل 2-2 في EI: السؤال الأول يحسم
+  function tieCase(firstChoice){
+    return computeResult(QUESTIONS.map(function(q,i){
+      if(q.dim!=='EI')return 'A';
+      return i===0?firstChoice:(i<3?(firstChoice==='A'?'B':'A'):firstChoice);
+    }));
+  }
+  var t1=tieCase('A').dims[0],t2=tieCase('B').dims[0];
+  out.tie={firstA:t1.letter+' tie='+t1.tie,firstB:t2.letter+' tie='+t2.tie};
+  var part=QUESTIONS.map(function(){return 'A';});part[5]=null;
+  out.incompleteIsNull=computeResult(part)===null;
+  console.table(out.types);console.log(out);return out;
+};
+
+/* ===== الحالة والواجهة ===== */
+var state={lang:'ar',screen:'home',index:0,answers:new Array(QUESTIONS.length).fill(null)};
+var toastTimer=null;
+function $(id){return document.getElementById(id);}
+function t(k){return I18N[state.lang][k];}
+function loadLang(){try{var s=localStorage.getItem('mindtype-lang');if(s==='ar'||s==='en')state.lang=s;}catch(e){}}
+function saveLang(){try{localStorage.setItem('mindtype-lang',state.lang);}catch(e){}}
+function setLang(l){state.lang=l;saveLang();render();} // الإجابات مستقلة عن اللغة
+
+function chrome(){
+  var h=document.documentElement;h.lang=state.lang;h.dir=state.lang==='ar'?'rtl':'ltr';
+  $('langBtn').textContent=t('langBtn');
+  $('langBtn').setAttribute('lang',state.lang==='ar'?'en':'ar');
+  document.querySelectorAll('[data-i]').forEach(function(el){el.textContent=t(el.getAttribute('data-i'));});
+}
+function showScreen(n){state.screen=n;['home','quiz','result'].forEach(function(s){$('s-'+s).hidden=s!==n;});}
+function render(){
+  chrome();hideWarn();
+  if(state.screen==='quiz')renderQuestion();
+  else if(state.screen==='result')renderResult();
+  showScreen(state.screen);
+}
+
+function renderQuestion(){
+  var q=QUESTIONS[state.index],total=QUESTIONS.length,pct=Math.round(state.index/total*100);
+  $('qCounter').textContent=t('counter').replace('{n}',state.index+1).replace('{total}',total);
+  $('qPct').textContent=pct+'%';
+  $('fillbar').style.width=pct+'%';
+  $('progress').setAttribute('aria-valuenow',String(pct));
+  $('qText').textContent=q.text[state.lang];
+  var box=$('options');box.textContent='';
+  ['A','B'].forEach(function(key){
+    var label=document.createElement('label');label.className='option';
+    var input=document.createElement('input');input.type='radio';input.name='answer';input.value=key;
+    input.checked=state.answers[state.index]===key;
+    if(input.checked)label.classList.add('sel');
+    input.addEventListener('change',function(){selectAnswer(key);});
+    var dot=document.createElement('span');dot.className='dot';dot.setAttribute('aria-hidden','true');
+    var tx=document.createElement('span');tx.className='otext';tx.textContent=q.options[key].text[state.lang];
+    label.appendChild(input);label.appendChild(dot);label.appendChild(tx);box.appendChild(label);
+  });
+  $('prevBtn').textContent=t('prev');$('prevBtn').disabled=state.index===0;
+  $('nextBtn').textContent=state.index===total-1?t('finish'):t('next');
+}
+function selectAnswer(v){
+  state.answers[state.index]=v; // يُخزَّن في موضع السؤال فقط فلا يُحتسب مرتين
+  document.querySelectorAll('#options .option').forEach(function(l){l.classList.toggle('sel',l.querySelector('input').value===v);});
+  hideWarn();
+}
+function showWarn(k){var e=$('warnMsg');e.textContent=t(k);e.hidden=false;}
+function hideWarn(){$('warnMsg').hidden=true;}
+function goNext(){
+  if(state.answers[state.index]===null){showWarn('warnNo');var f=document.querySelector('#options input');if(f)f.focus();return;}
+  if(state.index<QUESTIONS.length-1){state.index++;renderQuestion();$('qText').focus({preventScroll:true});return;}
+  finishQuiz();
+}
+function goPrev(){if(state.index>0){state.index--;hideWarn();renderQuestion();$('qText').focus({preventScroll:true});}}
+function finishQuiz(){
+  var miss=state.answers.indexOf(null);
+  if(miss!==-1){state.index=miss;renderQuestion();showWarn('warnInc');return;}
+  state.screen='result';render();window.scrollTo({top:0});$('rType').focus({preventScroll:true});
+}
+
+function renderResult(){
+  var res=computeResult(state.answers); // إعادة حساب من الإجابات الحالية دائمًا
+  if(!res){state.screen='home';return;}
+  var info=TYPES[res.type],L=state.lang;
+  $('rType').textContent=res.type;$('rName').textContent=info.name[L];$('rDesc').textContent=info.desc[L];
+  var grid=$('dimsGrid');grid.textContent='';var closeNames=[];
+  res.dims.forEach(function(d){
+    var card=document.createElement('div');card.className='card';
+    var title=document.createElement('div');title.className='dtitle';title.textContent=I18N[L].dimNames[d.key];
+    if(d.close){var tag=document.createElement('span');tag.className='tag';tag.textContent=t('closeTag');title.appendChild(tag);closeNames.push(d.first+'/'+d.second);}
+    var row=document.createElement('div');row.className='drow';
+    var a=document.createElement('span');a.textContent=d.first+' '+d.countFirst+'/4 ('+d.pctFirst+'%)';
+    var b=document.createElement('span');b.textContent=d.second+' '+d.countSecond+'/4 ('+d.pctSecond+'%)';
+    (d.letter===d.first?a:b).classList.add('win');row.appendChild(a);row.appendChild(b);
+    var bar=document.createElement('div');bar.className='bar';bar.setAttribute('aria-hidden','true');
+    var fl=document.createElement('div');fl.style.width=d.pctFirst+'%';bar.appendChild(fl);
+    var ds=document.createElement('p');ds.className='ddesc';
+    var li=I18N[L].L[d.letter];ds.textContent=li[0]+': '+li[1]+(d.tie?' '+t('closeNote'):'');
+    card.appendChild(title);card.appendChild(row);card.appendChild(bar);card.appendChild(ds);grid.appendChild(card);
+  });
+  fillList($('strList'),info.strengths[L]);fillList($('chaList'),info.challenges[L]);
+  var tn=$('tieNote');
+  if(closeNames.length){tn.textContent=t('tieNote').replace('{dims}',closeNames.join(L==='ar'?'، ':', '));tn.hidden=false;}else{tn.hidden=true;}
+  $('manualBox').hidden=true;
+}
+function fillList(ul,items){ul.textContent='';items.forEach(function(x){var li=document.createElement('li');li.textContent=x;ul.appendChild(li);});}
+
+/* ===== المشاركة والنسخ ===== */
+function buildShareText(res){
+  var L=state.lang;
+  var lines=res.dims.map(function(d){return d.first+' '+d.countFirst+'/4 · '+d.second+' '+d.countSecond+'/4';});
+  return t('shareHead')+': '+res.type+' — '+TYPES[res.type].name[L]+'\n'+lines.join(' | ')+'\n'+t('resDis');
+}
+function showToast(msg,kind){
+  var el=$('toast');el.textContent=msg;el.className='toast '+(kind||'');el.hidden=false;
+  clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.hidden=true;},3500);
+}
+function legacyCopy(text){
+  var ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');
+  ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);
+  ta.select();ta.setSelectionRange(0,text.length);
+  var ok=false;try{ok=document.execCommand('copy');}catch(e){ok=false;}
+  document.body.removeChild(ta);return ok;
+}
+async function copyText(text){
+  var ok=false;
+  if(navigator.clipboard&&window.isSecureContext){try{await navigator.clipboard.writeText(text);ok=true;}catch(e){ok=false;}}
+  if(!ok)ok=legacyCopy(text);
+  if(ok){showToast(t('copied'),'ok');} // لا نعرض النجاح إلا بعد التحقق
+  else{$('manualText').value=text;$('manualBox').hidden=false;$('manualText').focus();$('manualText').select();showToast(t('copyFail'),'error');}
+}
+async function shareResult(){
+  var res=computeResult(state.answers);if(!res)return;
+  var text=buildShareText(res);
+  if(navigator.share){
+    try{await navigator.share({title:'MINDTYPE',text:text});showToast(t('shared'),'ok');return;}
+    catch(err){if(err&&err.name==='AbortError')return;} // إلغاء المستخدم: لا رسالة
+  }
+  await copyText(text);
+}
+
+/* ===== التنقل ===== */
+function startTest(){state.answers=new Array(QUESTIONS.length).fill(null);state.index=0;state.screen='quiz';render();window.scrollTo({top:0});}
+function goHome(){state.screen='home';render();window.scrollTo({top:0});}
+function init(){
+  loadLang();
+  $('langBtn').addEventListener('click',function(){setLang(state.lang==='ar'?'en':'ar');});
+  $('brandBtn').addEventListener('click',goHome);
+  $('startBtn').addEventListener('click',startTest);
+  $('nextBtn').addEventListener('click',goNext);
+  $('prevBtn').addEventListener('click',goPrev);
+  $('shareBtn').addEventListener('click',shareResult);
+  $('retakeBtn').addEventListener('click',startTest);
+  $('homeBtn').addEventListener('click',goHome);
+  render();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+</script>
+</body>
+</html>
